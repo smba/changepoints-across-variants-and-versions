@@ -388,11 +388,11 @@
 	The algorithm terminates if the solution cache does not change for a number of iterations or a maximum number of iterations/measurements has been reached.
 	Next, we present the steps of our approach in detail. 
 	
-	\begin{figure*}[ht]
+	\begin{figure}[ht]
 		\includegraphics[width=0.75\linewidth]{images/diagram_april.pdf}
 		\caption{Overview of our approach:  \textcircled{1} Selecting training data across configuration space and time, \textcircled{2} estimating the change point probability distribution per configuration, \textcircled{3} estimating change points as candidate solutions, \textcircled{4} adaptively augmenting the training set, and \textcircled{5} updating the solution cache and evaluating termination.}
 		\label{fig:overview}
-	\end{figure*}
+	\end{figure}
 
 	\subsection{Initialization and Sampling}\label{sec:initialization}
 	The first step in our approach is to select a sample set of performance measurements. 
@@ -623,18 +623,17 @@ So, we first estimate candidate commits based on the change point likelihood fro
 
     \begin{table}
         \centering
-        \captionof{table}{Some figure}
+        \captionof{table}{Project characteristics for our three subject systems}
         \label{tab:properties}
         \begin{tabular}{lrr}
 			\toprule
-			\textbf{Name} & \textbf{$\vert O\vert$} & \textbf{$\vert C\vert$}\\
+			\textbf{Name} & \textbf{\#Options} & \textbf{\#Commits}\\
 			\midrule
 			\textsc{xz} & 16 & 1193\\
 			\textsc{lrzip} & 9 & 743 \\
 			\textsc{oggenc} & 12 & 935\\
 			\bottomrule
-		\end{tabular}\\
-		{\footnotesize $\vert O\vert$~=~number of options,\\ $\vert C\vert$~=~number of commits }
+		\end{tabular}
     \end{table}
 
 	\subsubsection{Exploratory Pre-Study}
