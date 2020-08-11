@@ -152,9 +152,9 @@
 	\begin{abstract}
 		We address the problem of identifying performance changes in the evolution of configurable software systems. Finding optimal configurations and configuration options that influence performance is already difficult, but in light of software evolution, configuration-dependent performance changes may lurk in a potentially large number of different versions of the system.
 		
-		In this work, we combine two perspectives -- variability and time -- and propose a novel approach to identify configuration-dependent performance changes. In a nutshell, we iteratively sample pairs of configurations and versions and measure the respective performance that help us update a model of likelihoods for performance changes. Pursuing a search strategy with the goal of measuring selectively and incrementally further pairs, we increase the accuracy of identified change points related to configuration options and interactions.
+		In this work, we combine two perspectives -- variability and time -- {\color{red} into a novel perspective}. We propose an approach to identify configuration-dependent performance changes: {\color{red}\emph{spatio-temporal performance analysis}}. In a nutshell, we iteratively sample pairs of configurations and versions and measure the respective performance that help us update a model of likelihoods for performance changes. Pursuing a search strategy with the goal of measuring selectively and incrementally further pairs, we increase the accuracy of identified change points related to configuration options and interactions.
 		
-		We have conducted a number of experiments both on controlled synthetic datasets as well as in real-world scenarios with different software systems. Our evaluation demonstrates that we can pinpoint performance shifts to configuration options and interactions as well as commits introducing change points with high accuracy and at scale. Our experiments on three real-world systems confirm the effectiveness and practicality of our approach.
+		We have conducted a number of experiments both on controlled synthetic datasets as well as in real-world scenarios with different software systems. Our evaluation demonstrates that we can pinpoint performance shifts to configuration options and interactions as well as commits introducing change points with high accuracy and at scale. Our experiments on three real-world systems {\color{red}explore} the effectiveness and practicality of our approach.
 		
 	\end{abstract}
 
@@ -234,10 +234,10 @@
 	%\paragraph{\bfseries What are our contributions?}
 	In summary, we offer the following contributions:
 	\begin{itemize}
-		\item A technique to effectively identify shifts in performance of configurable software system. We are able to pin point causative commits and affected configuration options with high accuracy and tractable effort.
+		\item A {\color{red}novel perspective and} technique to effectively identify shifts in performance of configurable software systems. We are able to pinpoint causative commits and affected configuration options with high accuracy and tractable effort.
 		\item A feasibility demonstration of our approach by implementing an adaptive learning strategy to obtain accurate estimations with acceptable measurement cost.
-		\item An evaluation using both synthetic and real-world performance data from three configurable software systems. Synthetic data lets us assess our model and approach conceptually and at scale, whereas we are able to assess practicality with real-world data..
-		\item A companion website\footnote{\url{https://github.com/submission-398/changepoints/}} providing supplementary material including a reference implementation of our approach, performance measurement data, and additional visualizations.
+		\item An evaluation using both synthetic and real-world performance data from three configurable software systems. Synthetic data lets us assess our model and approach conceptually and at scale, whereas we are able to assess practicality with real-world data.
+		\item A companion website\footnote{\url{https://github.com/AI-4-SE/Changepoints-Across-Variants-And-Versions}} providing supplementary material including a reference implementation of our approach, performance measurement data, and additional visualizations.
 	\end{itemize}
 
 	\section{Configuration-Dependent Change Points}
@@ -389,7 +389,7 @@
 	Next, we present the steps of our approach in detail. 
 	
 	\begin{figure}[ht]
-		\includegraphics[width=0.75\linewidth]{images/diagram_april.pdf}
+		\includegraphics[width=\linewidth]{images/diagram_april.pdf}
 		\caption{Overview of our approach:  \textcircled{1} Selecting training data across configuration space and time, \textcircled{2} estimating the change point probability distribution per configuration, \textcircled{3} estimating change points as candidate solutions, \textcircled{4} adaptively augmenting the training set, and \textcircled{5} updating the solution cache and evaluating termination.}
 		\label{fig:overview}
 	\end{figure}
@@ -571,7 +571,7 @@ So, we first estimate candidate commits based on the change point likelihood fro
 	For a fair assessment, we require not only a large set of systems, but also the respective ground truth performance measurements. In brief, it is practically impossible to conduct such exhaustive performance measurements in the large, which is the main reason for proposing our approach in the first place.
 
 	To mitigate this trade-off in our evaluation, we conduct two separate experiments, based on synthetic and real-world performance measurements. The first experiments uses synthesized performance data and allows for a controlled experimental setup to assess scalability, accuracy, and efficiency at low cost while simultaneously be able to simulate different scenarios by varying the number of change points and affected configurations in the synthesized data.
-	The second experiment uses real-world performance measurements along with a non-exhaustive ground truth performance measurements to answer whether our algorithm is practically applicable to real-world systems.
+	{\color{red}The second experiment uses a batch of real-world performance measurements of three software systems as a non-exhaustive ground truth to explore whether our algorithm can be practically applied to real-world systems.}
 	
 	This split experiment setup allows for assessing accuracy, efficiency, and scalability in-depth without the pitfall of exhaustive measurements. At the same time, it enables us to validate the approach in a real-world setting. The first and second experiment answer the following two research questions, respectively:
 	\begin{enumerate}[$\text{RQ}_1$)]
@@ -619,7 +619,7 @@ So, we first estimate candidate commits based on the change point likelihood fro
 	To assess efficiency, we employ the required number of iterations for termination and required measurements in relation to the $\text{F}_1$ score as proxy metrics.
 	
 	\subsection{Real-World Experiment Setup}
-	In the second experiment, we evaluate our approach from a practitioner's perspective, where the properties and whereabouts of change points are unknown.  By means of three real-world configurable software systems, we investigate practical challenges and to determine whether our algorithm is able to detect performance-relevant commits with respect to configuration options. 
+	In the second experiment, we evaluate our approach from a practitioner's perspective, where the properties and whereabouts of change points are unknown.  By means of three real-world configurable software systems, we investigate in particular practical challenges and to determine whether our algorithm is able to detect performance-relevant commits with respect to configuration options. 
 
     \begin{table}
         \centering
@@ -638,17 +638,18 @@ So, we first estimate candidate commits based on the change point likelihood fro
 
 	\subsubsection{Exploratory Pre-Study}
 	Of course, we cannot obtain an exhaustive ground truth data of our selected subject systems since the search space for such problem is exponential in the number of configuration options. 
-	However, to provide some context for interpretation of our results, we measured a representative subset of configurations across all commits. To be precise, we sampled configurations using feature-wise, negative feature-wise, pair-wise, and also uniform random sampling strategies, which have been successfully applied to learn performance influences before~\cite{alves_sampling_2020}. We sampled as many random configurations as there are valid configurations sampled with pairwise sampling. In total, we sampled 79 configurations for \textsc{lrzip}, 152 for \textsc{oggenc}, and 161 for \textsc{xz}. The metrics of the three software systems are described in Table~\ref{tab:properties}.
+	However, to provide some context for interpretation of our results, we measured performance for a representative subset of configurations across all commits. To be precise, we sampled configurations using feature-wise, negative feature-wise, pair-wise, and also uniform random sampling strategies, which have been successfully applied to learn performance influences before~\cite{alves_sampling_2020}. We sampled as many random configurations as there are valid configurations sampled with pairwise sampling. In total, we sampled 79 configurations for \textsc{lrzip}, 152 for \textsc{oggenc}, and 161 for \textsc{xz}. The metrics of the three software systems are described in Table~\ref{tab:properties}.
 	
-	
-	As a workload for \textsc{lrzip} and \textsc{xz}, we compressed the Silesia corpus which contains over 200~MB of files of different movie types. For \textsc{oggenc}, we encoded a WAVE audio file of over 60~MB from the Wikimedia Commons collection. The workloads for \textsc{xz} and \textsc{lrzip} have been studied in previous work~\cite{siegmund_views_2015,muhlbauer_accurate_2019}. For all subject systems, we assess performance by reporting the execution time.
+	As a workload for the file compression tools \textsc{lrzip} and \textsc{xz}, we compressed the Silesia corpus which contains over 200~MB of files of different types.  {\color{red} This workload was designed to compare different file compression algorithms and tools.} For the audio transcoder \textsc{oggenc}, we encoded a raw WAVE audio file of over 60~MB from the Wikimedia Commons collection.  The workloads for \textsc{xz} and \textsc{lrzip} have been studied in previous work~\cite{siegmund_views_2015,muhlbauer_accurate_2019}. For all three subject systems, we assess performance by reporting the execution time.
 	
 	All measurements were conducted on clusters with identical hard- and software setups. The experiments ran on Ubuntu machines with Intel~Core
-	2 Quad CPUs (2.83~GHz) and 8~GB of RAM (\textsc{xz} and \textsc{lrzip}) and 16~GB of RAM (\textsc{oggenc}). To mitgate measurement bias, we repeated each measurement five times. The coefficient of variation across all machines was well below ten percent. For versions that did not build, we reported the performance of the most recent commit that did not fail to build.
+	2 Quad CPUs (2.83~GHz) and 8~GB of RAM (\textsc{xz} and \textsc{lrzip}) and 16~GB of RAM (\textsc{oggenc}). To mitgate measurement bias, we repeated each measurement five times. The coefficient of variation (the ratio of standard deviation and the arithmetic mean) across all machines was well below ten percent. For commits that did not build, we reported the performance of the most recent commit that did not fail to build.
 	
 	\subsubsection{Operationalization}
-	For the experiment, we run our approach on the performance measurements obtained in our pre-study with a few adjustments.
-	First, although our study provides a broad and representative sample set of configurations, we cannot arbitrarily sample valid configurations. Instead, when acquiring new configurations (cf. Sec.~\ref{sec:acquisition}), we select configurations that (1) have not already been used by our algorithm, and (2) are closest to the requested configuration (i.e., with the minimal Hamming distance). The rationale is that this allows for rapid repetitions with different initializations. Since we employ multiple sampling strategies we are confident that our broad pre-study is representative. Second, we set the number of measurements per iteration to 300. This value is substantially smaller than in our controlled experiment setup, where we explore the scalability of our approach. Third, as an initial configuration sample set, we randomly sample 5 configurations from our pre-study set. 
+	For the experiment, we apply our approach on the performance measurements obtained in our pre-study with a few adjustments.
+	First, although our study provides a broad and representative sample set of configurations, we cannot arbitrarily sample valid configurations for a couple of reasons. {\color{red}In particular, these include the commits that do not build as well as hidden configuration options and constraints. While we collected configuration options and constraints thoroughly from documentation artifacts, we can not assure that our selection is complete. We discuss this limitation further in the threats to validity.}
+	
+	 Instead, when acquiring new configurations (cf. Sec.~\ref{sec:acquisition}), we select configurations {\color{red} from our batch of measurements} that (1) have not already been used by our algorithm, and (2) are "closest" to the requested configuration (i.e., with the minimal Hamming distance). The rationale is that this allows for rapid repetitions with different initializations {\color{red}of our algorithm}. Since we employ multiple sampling strategies in our pre-study we are confident that our broad batch of measurements is representative. Second, we set the number of measurements per iteration to 300. This value is substantially smaller than in our controlled experiment setup, where we explore the scalability of our approach. Third, as an initial configuration sample set, we randomly sample 5 configurations from our pre-study set. 
 	Last, we initialize our approach with a relative performance threshold $\theta_\tau$ (cf. Equation~\ref{eq:theta}) of ten percent. In the context of the reported relative variation among performance measurements on the machines used, we consider this a rather conservative threshold. 
 	We repeat the experiments 10 times with different seeds to assess robustness of our approach and account for the randomness in exploring the configuration space.
 	We assess practicality by reporting measurement effort, number of iterations in relation to the pre-study's results, which are based on a vastly greater measurement budget.
@@ -723,7 +724,10 @@ So, we first estimate candidate commits based on the change point likelihood fro
 	\paragraph{Pinpointing Configuration Options}
 	The synthetic setup has shown that our algorithm can conceptually handle both time and space. We were able to precisely identify commits for which performance changed substantially. By contrast, we were not able to fully reproduce this in a setting with real-world data regarding pinpointing change points to configuration options. Possible explanations in the case of \textsc{lrzip} include a partly inconsistent configuration interface. 
 	The reason for that is not a limitation of our approach, but missing information in the real-world data (which makes the synthetic setup so important). So, we have documented that, given a precisely identified commit, we can link the affected files to configuration options with little effort. In turn, given a set of code segments of a commit, matching this with the overall code base has been extensively studied before under the umbrella of feature location techniques~\cite{hill_which_2013}.
-	Inconsistencies in the documentation of configuration options is a well known and prevalent problem~\cite{rabkin_static_2011}. Our approach might be a means to complement existing feature location techniques with information about configuration-dependent performance changes. This is a promising further avenue of future work.
+	Inconsistencies in the documentation of configuration options is a well known and prevalent problem~\cite{rabkin_static_2011}. Our approach might be a means to complement existing feature location techniques with information about configuration-dependent performance changes. 
+	
+	
+	{\color{red}In our latter experiment, we emulated our approach on a broad but finite set of measurements rather than setting it up as an online pipeline. This does not correspond to the original layout of our algorithm, but lets us efficiently explore some limitations of this approach. We have learned, that for interpreting the results of our approach, domain knowledge is advantageous as we have identified incomplete/inconsistent configuration interfaces as possible limiting factors. We acknowledge that, while our approach performs well as an automated pipeline, for a real-world applications, a semi-automated setup with additional manual measurement prioritization and knowledge about configuration constraints would improve the applicability of our approach.} This is a promising further avenue of future work.
 	
 	\paragraph{Threats to Validity}
 	Threats to \emph{internal validity} include measurement noise that may distort change point approximation. We mitigate this threat by repeating each measurement five times and reporting the mean. With respect to the mean performance, the reported variation was below 10\%. For RQ2, we considered only performance changes of, at least, 10\%. We conducted a pre-study, where we manually identified change points.
