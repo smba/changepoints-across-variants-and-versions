@@ -201,8 +201,10 @@
 	%Most problems involving configuration options, such as finding a configuration with optimal performance~\cite{ohFindingNearoptimalConfigurations2017,nairFlash18} or estimating the influence on performance of an individual option~\cite{siegmundPredictingPerformanceAutomated2012,siegmundPerformanceinfluenceModelsHighly2015,sarkarCostEfficientSamplingPerformance,haDeepPerf2019}.
 
 	%\paragraph{\bfseries Why has it not been solved before?}
-	Our goal is to identify changes in the performance histories of configurable software systems and pinpoint them to a specific option or interaction. For example, a patch of a certain feature is likely to affect only configurations where such feature is selected.
-	In essence, we face a huge combinatorial problem for performance-change detection: code changes across software versions and behavioral changes across software variants.
+	%Our goal is to identify changes in the performance histories of configurable software systems and pinpoint them to a specific option or interaction. For example, a patch of a certain feature is likely to affect only configurations where such feature is selected.
+	%In essence, we face a huge combinatorial problem for performance-change detection: code changes across software versions and behavioral changes across software variants.
+	
+	{\color{red}Our goal is to enable the \emph{retrospective} detection of changes in the performance of configurable software systems and pinpoint them to a specific option or interaction. For example, a patch of a certain feature is likely to affect only configurations where such feature is selected. Many software systems are configurable, but have no performance regression testing routine set in place. To uncover performance deficiencies that emerged from revisions in the past development history, it is infeasible to test each and every commit and configuration.} In essence, we face a huge combinatorial problem for performance-change detection: code changes across software versions and behavioral changes across software variants.
 	Our problem arises along two dimensions: time (versions) and configuration space (variants).
 	\emph{First}, we aim at finding performance changes in software performance from one version to another.
 	The detection of such changes is referred to as \emph{change point detection} and is a recurring theme in temporal analysis.
@@ -230,8 +232,7 @@
 	Next, we leverage similarities in the performance histories of configurations that share common options.
 	Since we sample the commits for each configuration independently, for each change point, we obtain many estimations using measurements of different commits.
 	Overall, this allows us to obtain more accurate estimations of performance-changing commits with tractable effort.
-	Based on a mapping from configurations to predicted change point probabilities for each configuration and commit, we derive the options responsible for each particular change point: configuration-dependent change points.
-	%\paragraph{\bfseries What are our contributions?}
+	Based on a mapping from configurations to predicted change point probabilities for each configuration and commit, we derive the options responsible for each particular change point: configuration-dependent change points. {\color{red}g}
 	In summary, we offer the following contributions:
 	\begin{itemize}
 		\item A {\color{red}novel perspective and} technique to effectively identify shifts in performance of configurable software systems. We are able to pinpoint causative commits and affected configuration options with high accuracy and tractable effort.
