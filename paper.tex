@@ -54,8 +54,10 @@
 %\definecolor{cadmiumgreen}{rgb}{0.0, 0.42, 0.24}
 %\definecolor{bostonred}{rgb}{0.8, 0.0, 0.0}
 
+\definecolor{indigo}{rgb}{0.0, 0.25, 0.72}
+\definecolor{indigo2}{rgb}{0.0, 0.25, 0.42}
 \newcommand{\greybox}[1]{
-	\begin{mdframed}[backgroundcolor=black!10!white,linewidth=0pt,backgroundcolor=black!10,linewidth=0pt,innerleftmargin=5pt,innertopmargin=5pt]
+	\begin{mdframed}[backgroundcolor=black!10!white,linewidth=0pt,backgroundcolor=indigo2!10,linewidth=0pt,innerleftmargin=5pt,innertopmargin=5pt]
 		%\noindent
 		#1
 	\end{mdframed}
@@ -386,8 +388,8 @@
 	In what follo, we present the steps of our approach in detail. 
 	
 	\begin{figure}[ht]
-		\includegraphics[width=\linewidth]{images/diagram_april.pdf}
-		\caption{Overview of our approach:  \textcircled{1} Selecting training data across configuration space and version history, \textcircled{2} estimating the change point probability distribution per configuration, \textcircled{3} estimating change points as candidate solutions, \textcircled{4} adaptively augmenting the training set, and \textcircled{5} updating the solution cache and evaluating termination.}
+		\includegraphics[width=\linewidth]{images/ablauf.pdf}
+		\caption{Overview of our approach:  \textcircled{1} Selecting training data across configuration space and version history, \textcircled{2} estimating the change point probability distribution per configuration, \textcircled{3} estimating change points as candidate solutions, \textcircled{4} adaptively augmenting the training set, and \textcircled{5} updating the solution cache and evaluating termination criteria.}
 		\label{fig:overview}
 	\end{figure}
 	
@@ -461,7 +463,7 @@
 	\begin{figure}
 		\centering
 		\includegraphics[width=\linewidth]{images/cpp_example.eps}
-		\caption{Performance history with 1.000 commits and two change points (bottom); Ground truth and approximated change point likelihood $p(v)$ (top)}
+		\caption{Performance history with 1,\,000 commits and two change points (bottom); Ground truth and approximated change point likelihood $p(v)$ (top)}
 		\label{fig:cpp_example}
 	\end{figure}
 	
@@ -474,7 +476,7 @@
 	
 	\subsubsection{Candidate Commits}
 	For each configuration, we compute an approximation of the change point likelihood over commits (cf. Figure~\ref{fig:cpp_example}) to identify local maxima (peaks). We select such peaks under the condition that the peak change point likelihood is greater than a threshold:
-	{\color{red}\begin{equation}
+	{\color{indigo}\begin{equation}
 	\begin{gathered}
 	t_\text{CPL} = \frac{1}{\vert V\vert} + N_\text{CPL} \cdot \underbrace{\sqrt{\frac{1}{\vert V\vert} \cdot \sum_{v \in V} \Big(\frac{1}{\vert V\vert} - p'(v)\Big)^2}}_{\text{standard deviation of }p'(v)}
 	\label{eq:t_cpl}
@@ -492,8 +494,8 @@
 	Instead of an ordinary linear regression model, we use a linear model that implements the $L_1$ norm for regularization (LASSO). In addition to the least squares penalty, this technique favors solutions with more parameters coefficients set to zero.
 	This technique is commonly used to help prevent over-fitting, decrease model complexity, and eliminate non-influential model parameters (configuration options, in our case)~\cite{lasso}. The effect of $L_1$ regularization in a model is specified by an additional hyper-parameter $\lambda$. We tune this hyper-parameter using threefold cross-validation.
 	
-	For each model (for a candidate commit), we consider a configuration option as associated with a commit, if its influence $c_i$ (i.e., the absolute value of its coefficient) is greater than a threshold $t_\text{influence}$:
-	{\color{red}\begin{equation}
+	For each model (for a candidate commit), we consider a configuration option as associated with a commit, if its influence $c_i$ (i.e., the absolute value of its coefficient) is greater than a threshold:% $t_\text{influence}$:
+	{\color{indigo}\begin{equation}
 	\begin{gathered}
 	t_\text{influence} = \frac{1}{n_\text{options}} + N_\text{influence} \cdot \underbrace{\sqrt{\frac{1}{n_\text{options}} \cdot \sum \Big(\frac{1}{n_\text{options}} - c_i\Big)^2}}_{\text{standard deviation of } c_i}
 	\label{eq:t_influence}
@@ -517,7 +519,7 @@
 	In the case of under-approximation, too few relevant configuration options are associated with a change point. Given a candidate change point, we require that all associated options keep enabled and that 50\,\% of all not-associated options can be selected. This way, we keep already associated options, but allow new configuration options to be included. Likewise, in the case of over-approximation, too many irrelevant configuration options are associated with a change point. Given a candidate change point, we require that variation only occurs among 50\,\% of the options associated with the change point. That is, we can remove up to 50\,\% of configuration options and narrow down the selection of relevant configuration options.
 	
 	We limit the total number of new measurements per iteration with a budget $n_\text{measurements}$. This budget is split between acquisition for commits and configurations with a factor $n_\text{commits\_to\_configs} = 0.5$. The measurement budget for commit acquisition is further split between exploration and exploitation with a factor $n_\text{commits\_explore} = 0.5$. That is, initially, 50\,\% of the budget are used for configuration acquisition and 25\,\% for commit exploration and exploitation, respectively. 
-	{\color{red}As the algorithm proceeds, we multiply the factor $n_\text{commits\_to\_configs}$ by 0.95 and the factor $n_\text{commits\_explore}$ by 0.9. That is, the algorithm shifts  (1) towards sampling configurations in depth and (2) focuses on exploitation in later iterations. The rationale is that we consider pinpointing commit to configuration options a more difficult task than finding performance-changing commits.}
+	{\color{indigo}As the algorithm proceeds, we multiply the factor $n_\text{commits\_to\_configs}$ by 0.95 and the factor $n_\text{commits\_explore}$ by 0.9. That is, the algorithm shifts  (1) towards sampling configurations in depth and (2) focuses on exploitation in later iterations. The rationale is that we consider pinpointing commit to configuration options a more difficult task than finding performance-changing commits.}
 	% zu schnell -> genereller Shift in Richtung exloitation und weg von exploration
 	
 	\subsection{Solution Cache and Stoppage Criteria}\label{sec:solutioncache}
@@ -560,7 +562,7 @@
 	We present the ranges of the two parameters in Table~\ref{tab:synthetic_experiment_ranges}.
 	
 	\subsubsection{Operationalization}
-	We {\color{red}synthesize performance data by initializing each option with a randomly selected influence (cf. coefficients from Equation~\ref{eq:pimodel}) from the range $\left[-1,1 \right]$}. In addition, we randomly select a number of interactions among options to introduce interactions of varying degrees. The interaction degree (i.e., number of selected configuration options) follows a geometric distribution. We assign to each interaction a real-valued influence uniformly from the range $[-1, 1]$. We define six parameter ranges (cf.~Table~\ref{tab:synthetic_experiment_ranges}) for the number of configuration options $n_\text{options}$, the number of commits $n_\text{commits}$, the number of change points $n_\text{changepoints}$, the parameter for the geometric distribution of interaction degrees $p_\text{interaction}$, a factor $N_\text{initial}$, and the number of measurements per iteration $n_\text{measurements}$. The initial number of configurations is the product of $n_\text{options}$ and $N_\text{initial}$. We construct the Cartesian product of all parameter ranges and specify a maximum number of 30 iterations. In addition, we synthesize for each parameter combination in the parameter grid five different software systems by employing different seeds such that no seed is used twice. The total number of experiments with seeds is 10,\,800.% For all synthetic experiments, we specify a maximum number of 30 iterations. 	
+	We {\color{indigo}synthesize performance data by initializing each option with a randomly selected influence (cf. coefficients from Equation~\ref{eq:pimodel}) from the range $\left[-1,1 \right]$}. In addition, we randomly select a number of interactions among options to introduce interactions of varying degrees. The interaction degree (i.e., number of selected configuration options) follows a geometric distribution. We assign to each interaction a real-valued influence uniformly from the range $[-1, 1]$. We define six parameter ranges (cf.~Table~\ref{tab:synthetic_experiment_ranges}) for the number of configuration options $n_\text{options}$, the number of commits $n_\text{commits}$, the number of change points $n_\text{changepoints}$, the parameter for the geometric distribution of interaction degrees $p_\text{interaction}$, a factor $N_\text{initial}$, and the number of measurements per iteration $n_\text{measurements}$. The initial number of configurations is the product of $n_\text{options}$ and $N_\text{initial}$. We construct the Cartesian product of all parameter ranges and specify a maximum number of 30 iterations. In addition, we synthesize for each parameter combination in the parameter grid five different software systems by employing different seeds such that no seed is used twice. The total number of experiments with seeds is 10,\,800.% For all synthetic experiments, we specify a maximum number of 30 iterations. 	
 	
 	\begin{table}
 		\centering
@@ -570,19 +572,19 @@
 			\toprule
 			\textbf{}                & \textbf{Parameter}        & \multicolumn{1}{r}{\textbf{Range}} \\
 			\midrule
-			\parbox[t]{20mm}{\multirow{4}{*}{\rotatebox[origin=c]{0}{\parbox{2cm}{\centering Synthesized Systems}}}} & $n_\text{options}$                & 8, 16, 32, 64                \\
+			\parbox[t]{20mm}{\multirow{4}{*}{\rotatebox[origin=c]{0}{\parbox{2cm}{\centering\footnotesize Synthesized Systems}}}} & $n_\text{options}$                & 8, 16, 32, 64                \\
 			& $n_\text{commits}$                & 1000, 2500                \\
 			& $n_\text{changepoints}$           & 1, 2, 5, 10                        \\
 			& $p_\text{interaction}$ & 0.5, 0.7, 0.9                     \\
 			\midrule
-			\parbox[t]{20mm}{\multirow{2}{*}{\rotatebox[origin=c]{0}{\parbox{2cm}{\centering Initialization}}}}   & $N_\text{initial}$       & 2, 5, 10                           \\
+			\parbox[t]{20mm}{\multirow{2}{*}{\rotatebox[origin=c]{0}{\parbox{2cm}{\centering\footnotesize Initialization}}}}   & $N_\text{initial}$       & 2, 5, 10                           \\
 			& $n_\text{measurements}$           & 100, 200, 500                      \\
 			\bottomrule            
 		\end{tabular}
 	\end{table}
 	
 	For each parameter combination, we record the number of measurements at each iteration, the required number of iterations for termination, as well as each iteration's candidate solution. To assess the accuracy of a parameter combination's outcome (as well as of intermediate iterations), we use the $\text{F}_1$ score, a combination of precision and recall. \emph{Precision} refers to the fraction of correctly identified associations (true positives) among the associations of the retrieved (candidate) solution. \emph{Recall} is the fraction of total number of the relevant associations (i.e., those we intend to find). The $\text{F}_1$ score is the harmonic mean of precision ($P$) and recall ($R$), defined as $\text{F}_1 = 2\cdot\frac{P \cdot R}{P + R}$.	In our context, we defined a correctly identified change point when a commits falls in a narrow 5 commit interval from the ground truth.
-	{\color{red}To assess efficiency, we employ the required number of iterations for termination and required measurements in relation to the $\text{F}_1$ score as proxy metrics.}
+	{\color{indigo}To assess efficiency, we employ the required number of iterations for termination and required measurements in relation to the $\text{F}_1$ score as proxy metrics.}
 	% schwer zu verstehen
 	
 	\subsection{Real-World Experiment Setup}
@@ -635,7 +637,7 @@
 		\end{subfigure}
 		\begin{subfigure}{\linewidth}
 			\centering
-			\vspace{4mm}
+			\vspace{1mm}
 			\includegraphics[width=\linewidth]{images/iterations_for_termination.pdf}
 			\vspace{-5mm}
 			\caption{Frequency of experiments terminating at different iterations.}	
@@ -658,7 +660,7 @@
 	For the experiments not terminating within limit (the rightmost bar in Figure~\ref{fig:results_rq1_frequency}), we conducted an additional analysis. We compared whether and how the parameter setting of Table~\ref{tab:synthetic_experiment_ranges} explains this non-termination. One setting stands out as the cause for not finishing the experiment within 30 iterations: the number of measurements per iterations. The lower the number of measurements ($n_\text{measurements}$), the more iterations our approach needs.
 	\vspace{2mm}
 	\greybox{
-		\textbf{Summary $\text{RQ}_1$}: We are able to identify and pinpoint config\-uration-specific performance change points accurately and at scale. The number of measurements per iteration is the main factor influencing how fast our algorithm terminates.
+		\textbf{Summary ($\text{RQ}_1$)}: We are able to identify and pinpoint config\-uration-specific performance change points accurately and at scale. The number of measurements per iteration is the main factor influencing how fast our algorithm terminates.
 	}
 	
 	\subsubsection{$\text{RQ}_2$ (Pre-Study)}
@@ -682,13 +684,13 @@
 	We attribute the inconclusive results for \textsc{lrzip} in part to the inconsistency of the configuration interface. For both \textsc{xz} and \textsc{lrzip}, many configuration options are alternatives. That is, for a functionality such as the compression algorithm, only one of the available options can be selected. In our approach, we employ Lasso regression for automated feature selection. This regression model might, given only a small configuration sample, have difficulties with attributing a change point to multiple alternative configuration options and rather opt for one instead.  %Across the repetitions of our experiments, we have found candidate solutions close to the two change points commits for \textsc{xz} and \textsc{oggenc}, respectively, on average, after 3 to 5 iterations. After more than five iterations, the majority of repetitions pinpointed commits correctly within our narrow 5 commit interval.
 	\vspace{2mm}
 	\greybox{
-		\textbf{Summary}: Our approach is able to precisely link change points to commits with real-world data. Manually associating commits with configuration options worked in many cases, whereas the automated analysis was inconclusive due to incomplete data in the repositories. We observed, at least, one inconsistency in the configuration interface of one subject system.
+		\textbf{Summary ($\text{RQ}_2$)}: Our approach is able to precisely link change points to commits with real-world data. Manually associating commits with configuration options worked in many cases, whereas the automated analysis was inconclusive due to incomplete data in the repositories. We observed, at least, one inconsistency in the configuration interface of one subject system.
 	}
 	
 	\section{Discussion}\label{sec:discussion}
 	\paragraph{Efficiency} Among all experiments conducted with our synthetic setup, our approach yielded reasonable to high accuracy across most parameter settings. A subsequent analysis of parameter settings showed that our algorithm is not limited by the size of a problem space, but rather the number of measurements per iteration. 
 	% mehr Interpretation, Details ausblenden
-	{\color{red}Our algorithm found multiple change points across settings of up to 2,500 commits and and 2$^{64}$ configurations, resulting in a search space of about $4.6 \cdot 10^{22}$ possible measurements.
+	{\color{indigo}Our algorithm found multiple change points across settings of up to 2,500 commits and and 2$^{64}$ configurations, resulting in a search space of about $4.6 \cdot 10^{22}$ possible measurements.
 	In the context of not more than 5,000 measurements per iteration, the maximum number of measurements (after 30 iterations) added to the initial set of measurements is 150,000. For a setting with 2,500 commits, this represents around $1.4 \cdot 10^{-6}$\,\% and $3.2\cdot 10^{-16}$\,\% of possible measurements for settings with 32 and 64 options, respectively. The vast majority of cases terminated in early iterations.} Hence, we are confident that our approach scales and can efficiently approximate change points for large software systems. Notably, we are able to reproduce this finding in real-world settings when identifying the temporal location of change points. For our controlled experiment setup, we have not tuned the algorithms’ parameters to reach optimal efficiency or accuracy. However, even without tuning, we demonstrated the feasibility and efficiency of our approach. Project-specific fine tuning of several parameters is a possible extension to our approach and can further improve our results.
 	
 	\paragraph{Pinpointing Configuration Options}
@@ -712,7 +714,7 @@
 	
 	\section{Conclusion}
 	% sperrig laut sven
-	{\color{red}Changes in the observed performance of a software system can be configuration-specific and difficult to pinpoint to configuration options and commits. We combine both two orthogonal perspectives, the commit history and configurability of software systems to pinpoint performance changes to individual commits and configuration options. 
+	{\color{indigo}Changes in the observed performance of a software system can be configuration-specific and difficult to pinpoint to configuration options and commits. We combine both two orthogonal perspectives, the commit history and configurability of software systems to pinpoint performance changes to individual commits and configuration options. 
 	We propose an iterative sampling approach that leverages similarities in performance histories of related configurations to identify performance shifts precisely and, subsequently, pinpoint them to configuration options and interactions. 
 	We have shown with a synthetic data set that our approach is sound and able to identify performance change points accurately and at scale. Experiments with three configurable software systems confirm the temporal precision of our approach and have confirmed prevalent practical challenges when studying real world-software systems. It is an avenue for further research to incorporate further information, such as commit artifacts, when pinpointing performance changes.}
 	

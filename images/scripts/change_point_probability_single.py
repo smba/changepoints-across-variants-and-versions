@@ -9,7 +9,7 @@ import seaborn as sns
 np.random.seed(3213)
 
 sns.set_context("paper")
-plt.style.use('seaborn-paper')
+plt.style.use('seaborn-bright')
 sns.set_style("whitegrid")
 
 import numpy as np
@@ -70,8 +70,8 @@ for cp in cps:
     
 sns.rugplot(obs2, ax=ax1)
 ax1.scatter([], [], marker="|", linewidth=2, s=100, label="sample measurements")
-ax2.set_xlabel("time")
-ax2.set_ylabel("performance")
+ax2.set_xlabel("Time")
+ax2.set_ylabel("Performance")
 ax2.plot(ys)
 ax1.legend()
 

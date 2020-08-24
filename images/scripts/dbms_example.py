@@ -12,9 +12,14 @@ import sklearn.linear_model as lm
 import sklearn.preprocessing as pre
 import itertools
 
+euro = ["#09ff67", "#bf0778", "#ff6709", "#09a1ff"]
+europalette = sns.color_palette(euro)
+sns.set_palette(europalette)
+
 sns.set_context("paper")
-plt.figure(figsize=(4.3, 2.5))
-plt.style.use('seaborn-paper')
+plt.figure(figsize=(4.9, 2))
+#plt.style.use('seaborn-bright')
+
 sns.set_style("whitegrid")
 labels = ["vanilla", "compression", "encryption", "compr & encr"]
 
@@ -52,8 +57,8 @@ perf[:25,2:] = np.nan
 for i in range(4):
     plt.plot(perf[:, i], label=labels[i], linewidth=2)
 for x in [25,50, 80]: plt.axvline(x, color="black", linestyle="--")
-plt.xlabel("time [commit]")
-plt.ylabel("performance [s]")
+plt.xlabel("Time [commit]")
+plt.ylabel("Performance [s]")
 plt.legend(loc=9, bbox_to_anchor=(1.25, 1.03))
 
 #plt.show()
