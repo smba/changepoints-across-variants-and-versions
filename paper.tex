@@ -361,60 +361,7 @@
 	 For \emph{exploration}, we might include the measurements denoted by white symbols~($\starlet$/$\pentago$). White stars~($\starlet$) represent measurements that explore new configurations. In our example, the interaction between \textsc{Compression} and \textsc{Encryption} is the only configuration left to be measured. We include several commits of a particular new configuration to unveil possible performance variation that indicates possible change points. White pentagons ($\pentago$) represent measurements that are of interest because they  increase the overall measurement coverage. We include measurements from large intervals of not yet measured commits, since possible change points can be hidden there.
 	 
 	These four strategies (exploration and exploitation of configurations and commits) prioritize measurements to be included next into the sample set. Adaptive sampling techniques have been successfully applied to obtain both performance-influence models~\cite{siegmundPredictingPerformanceAutomated2012,sarkarCostEfficientSamplingPerformance} and performance histories~\cite{muhlbauer_accurate_2019} before. However, it is unclear whether fewer measurements are sufficient to assess the performance-influence of configuration options and interactions with respect to version changes. This is what we address in this work.
-	
-	
-	\begin{comment}
-	{\color{magenta}We illustrate the measurement effort in Figure~\ref{fig:sampling_all}, where each dot represents a pair of configuration and version.
-		To reduce measurement effort, one could limit the measurements to either a few configurations (cf. Figure~\ref{fig:sampling_configurations}) or a few commits (cf. Figure~\ref{fig:sampling_versions}), but at the cost of information loss along the respective complementary dimension.
-		This would leave us with either accurate performance-influence models for few versions, resulting in poor temporal granularity, or with accurate performance histories, but only for a few configurations.
-		Both do not provide accurate estimations of changes in the performance influence.}
-	
-	To obtain accurate estimations with a limited budget of measurements, we require a different approach. 
-	The latter describes, in fact, an iterative and adaptive sampling approach.
-	That is, we use an initial, but sparse sample set to explore the problem space and then increase the level of granularity at promising regions and dimensions (history segments and individual features and interactions, in our case).
-	Adaptive sampling techniques have been successfully applied to  obtain both performance-influence models~\cite{siegmundPredictingPerformanceAutomated2012,sarkarCostEfficientSamplingPerformance} and performance histories~\cite{muhlbauer_accurate_2019} before.
-	However, it is unclear whether fewer measurements are sufficient to assess the performance-influence of configuration options and interactions with respect to version changes. This is what we aim to accomplish with our work.
-	\end{comment}
-	
-	\begin{comment}
-	\begin{figure}
-		\captionsetup{format=hang}
-		\begin{subfigure}{0.49\linewidth}
-			\includegraphics[width=\linewidth]{images/sampling_1.pdf}
-			\caption{Many configurations, but few versions}
-			\label{fig:sampling_configurations}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}{0.49\linewidth}
-			\includegraphics[width=\linewidth]{images/sampling_2.pdf}
-			\caption{Many versions, but few configurations}
-			\label{fig:sampling_versions}
-		\end{subfigure}
-		\vfill
-		\begin{subfigure}{0.49\linewidth}
-			\includegraphics[width=\linewidth]{images/sampling_3.pdf}
-			\caption{Many versions and configurations\\}
-			\label{fig:sampling_all}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}{0.49\linewidth}
-			\includegraphics[width=\linewidth]{images/sampling_4.pdf}
-			\caption{Initial sample augmented with additional measurements}
-			\label{fig:sampling_both}
-		\end{subfigure}
 		
-		\caption{{\color{magenta}Four different sampling strategies across time and configuration space.}}
-	\end{figure}
-	
-	
-	%	\begin{figure}
-	%\centering
-	%\includegraphics[width=\linewidth]{images/complexity.pdf}
-	%\caption{Complexity}
-	%\label{fig:complexity}
-	%\end{figure}
-	\end{comment}
-	
 	\section{An algorithm for change point detection}\label{sec:cpmodel}
 	We propose an algorithm to detect substantial shifts in the performance of software configurations and associate them to individual commits and options or interactions. We lay out our approach as an iterative search across the commit history and configuration space. 
 	
