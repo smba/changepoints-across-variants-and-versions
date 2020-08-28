@@ -689,16 +689,12 @@
 	
 	\section{Discussion}\label{sec:discussion}
 	\paragraph{Efficiency} Among all experiments conducted with our synthetic setup, our approach yielded reasonable to high accuracy across most parameter settings. A subsequent analysis of parameter settings showed that our algorithm is not limited by the size of a problem space, but rather by the number of measurements per iteration. 
-	% mehr Interpretation, Details ausblenden
 	Our algorithm found multiple change points across different parameter settings, including those with large numbers of commits and configuration options. 
-	%While the search space of possible measurements is exponential in the number of configuration options, the theoretical maximum measurement budget before the algorithm aborted was 150,00 measurements, considering  5,000 measurements timeout of 30 iterations. 
 	The vast majority of cases terminated in early iterations with high accuracy. That is, we were able to tackle a problem with exponential complexity (with respect to the number of configuration options from which we can draw new measurements) with a measurement budget that is linear in the number of iterations (we used only 30) and the measurements per iteration (between 100 and 500 measurements per iteration), respectively.
 	Hence, we are confident that our approach scales and can efficiently approximate change points for large software systems. Notably, we are able to reproduce this finding in real-world settings when identifying the temporal location of change points. For our controlled experiment setup, we have not tuned the algorithms’ parameters to reach optimal efficiency or accuracy. However, even without tuning, we demonstrated the feasibility and efficiency of our approach. Project-specific fine tuning of several parameters is a possible extension to our approach and can further improve our results.
 	
 	\paragraph{Pinpointing Configuration Options}
-	The synthetic setup has shown that our algorithm can conceptually handle both time and space. We were able to precisely identify commits for which performance changed substantially. By contrast, we were not able to fully reproduce this in a setting with real-world data when attempting to pinpoint change points to configuration options, which may be caused by an inconsistently documented configuration interface. Missing information in the real-world setup emphasizes the importance of a synthetic setup to evaluate approaches such as ours and explore possible limitations and necessary extensions. So, we have documented that, given a precisely identified commit, we can link the affected files to configuration options with little effort. In turn, given a set of code segments of a commit, matching this with the overall code base has been extensively studied before under the umbrella of feature location~\cite{hill_which_2013}.
-	Inconsistencies in the documentation of configuration options is a well known and prevalent problem~\cite{rabkin_static_2011}. 
-	
+	The synthetic setup has shown that our algorithm can conceptually handle both time and space. We were able to precisely identify commits for which performance changed substantially. By contrast, we were not able to fully reproduce this in a setting with real-world data when attempting to pinpoint change points to configuration options, which may be caused by an inconsistently documented configuration interface. Missing information in the real-world setup emphasizes the importance of a synthetic setup to evaluate approaches such as ours and explore possible limitations and necessary extensions. So, we have documented that, given a precisely identified commit, we can link the affected files to configuration options with little effort. In turn, given a set of code segments of a commit, matching this with the overall code base has been extensively studied before under the umbrella of feature location~\cite{hill_which_2013}. Inconsistencies in the documentation of configuration options is a well known and prevalent problem~\cite{rabkin_static_2011}. 
 	Our approach might be a means to complement existing feature location techniques with information about configuration-dependent performance changes. 	
 	In our latter experiment, instead of directly sampling new arbitrary configurations, we used a finite set of configurations as a proxy (cf.~Section~\ref{sec:rq2_operationalization}). This does not reflect the original layout of our algorithm, but lets us efficiently explore some limitations of this approach. We have learned that, for interpreting the results of our approach, domain knowledge is advantageous as we have identified incomplete and inconsistent configuration interfaces as possible limiting factors. We acknowledge that, while our approach performs well as an automated pipeline in a controlled environment, for real-world applications, a semi-automated setup with additional manual measurement prioritization and deeper knowledge of configuration constraints would improve the applicability of our approach. This is a promising further avenue of future work.
 	
@@ -716,12 +712,31 @@
 	A similar scenario to ours has been studied by Jamshidi et al.~\cite{jamishidi_transfer_2017,jamshidi_transfer_gp_2017,jamshidi_learning_2018}. Between software versions, the performance influence of only few configuration options changes. The authors propose two approaches for learning a transfer function between performance models of different environments, such as versions, based on Gaussian Processes~\cite{jamshidi_transfer_gp_2017} and progressive shrinking the configuration space~\cite{jamshidi_learning_2018}. We see great potential for future work in applying Gaussian Processes to our problem.
 	
 	\section{Conclusion}
-	Changes in the software performance of software systems can be configuration-specific and are impossible to unveil with exhaustive testing. In retrospect, knowledge about previous and existing performance changes can be useful to prioritize future measurements for performance regression testing. 
-	We take a look at both the commit history and configurability of software systems and propose a novel approach to identify and pinpoint performance changes to individual commits and configuration options and interactions. Our approach leverages similarities in performance histories of related configurations to identify performance changes. Subsequently, it associates such performance changes to individual configuration options and interactions. Our approach starts with a small set of measurements and iteratively queries new measurements to refine a prediction of configuration-specific change points.
-	We have shown with synthetic data that our approach is sound and can identify configuration-specific performance changes accurately and at scale. In a practical setting, we face prevalent challenges that can be handled with little manual effort. It is an avenue for further research to incorporate information, such as commit artifacts, into pinpointing performance changes to configuration options and interactions automatically. Our approach opens a new combined perspective by the combined analysis of software performance histories as well as software configuration spaces.
+	During software evolution changes can introduce performance
+	bottlenecks that are challenging detecting. As most contemporary
+	software systems are configurable, such performance changes are
+	often configuration-specific. This renders detecting configuration-
+	specific performance changes impossible with exhaustive measurements due to the combinatorial complexity of software systems‘ configuration spaces. We propose a novel approach to tackle
+	this complexity and identify configuration-specific performance
+	changes with workable effort. Starting from a small sample of measurements (pairs of configurations and commits), our approach iteratively selects new measurements along two dimensions: time and
+	configuration space. To iteratively update an approximation of existing change points, the selection of new measurements is guided by
+	an estimated change point likelihood of a commit introducing a performance change as well as by configurations that are likely associated
+	with performance changes, both based on previous measurements.
+	We evaluate our approach with respect to scalability, accuracy, and practicality with two sets of experiments. To demonstrate that our approach is sound
+	and efficient, we have applied our approach to synthetic data of
+	software systems varying in version history size and configuration
+	complexity. With relatively few measurements, we can accurately
+	identify configuration-specific performance changes for software
+	systems which exhibit thousands of commits and millions of configurations. To demonstrate feasibility in a practical setting, we
+	applied our approach to performance data of three configurable
+	software systems. We were able to detect prevalent performance
+	changes accurately, while partially confirming prevalent practical
+	challenges that are easy to overcome with manual inspection of
+	commit messages. In retrospect, our approach provides knowledge about previous and existing performance changes which can be useful to
+	prioritize future measurements for performance regression testing.
 	
 	\section{Acknowledgments}
-	We would also like to thank our reviewers for their comments. Apel’s work has been supported by the Deutsche Forschungsgemeinschaft (DFG) under the contract AP 206/11-1. Siegmund’s work has been supported by the DFG under the
+ 	Apel’s work has been supported by the Deutsche Forschungsgemeinschaft (DFG) under the contract AP 206/11-1. Siegmund’s work has been supported by the DFG under the
 	contracts SI 2171/2 and SI 2171/3-1.
 	
 	\clearpage
