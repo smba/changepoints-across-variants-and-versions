@@ -22,13 +22,13 @@
 %% in the same archive or directory.)
 %%
 %% The first command in your LaTeX source must be the \documentclass command.
-\documentclass[sigconf]{acmart}
+\documentclass[sigconf, screen]{acmart}
 \usepackage{microtype}
 \usepackage[utf8]{inputenc}
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{setspace}
-\usepackage{enumerate}
+\usepackage{enumitem}
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{mathtools} 
@@ -38,6 +38,9 @@
 \usepackage{mdframed}
 \usepackage{wrapfig}
 \usepackage{caption}
+\usepackage{todonotes}
+%\usepackage{hyperref}
+
 
 \usepackage{oPlotSymbl}
 %\usepackage{tikz}
@@ -126,19 +129,19 @@
 	
 	\author{Stefan Mühlbauer}
 	\affiliation{%
-		\institution{Leipzig University,}
+		\institution{Leipzig University}
 		%\city{Doimukh}
 		\country{Germany}}
 	
 	\author{Sven Apel}
 	\affiliation{%
-		\institution{Saarland University,}
+		\institution{Saarland University\\Saarland Informatics Campus}
 		%\city{Doimukh}
 		\country{Germany}}
 	
 	\author{Norbert Siegmund}
 	\affiliation{%
-		\institution{Leipzig University,}
+		\institution{Leipzig University}
 		%\city{Doimukh}
 		\country{Germany}}
 	%%
@@ -166,10 +169,6 @@
 		<concept_significance>500</concept_significance>
 		</concept>
 		<concept>
-		<concept_id>10010147.10010257.10010282.10011304</concept_id>
-		<concept_desc>Computing methodologies~Active learning settings</concept_desc>
-		<concept_significance>500</concept_significance>
-		</concept>
 		<concept>
 		<concept_id>10011007.10011074.10011111.10011113</concept_id>
 		<concept_desc>Software and its engineering~Software evolution</concept_desc>
@@ -179,7 +178,7 @@
 	\end{CCSXML}
 	
 	\ccsdesc[500]{Software and its engineering~Software performance}
-	\ccsdesc[500]{Computing methodologies~Active learning settings}
+	%\ccsdesc[500]{Computing methodologies~Active learning settings}
 	\ccsdesc[500]{Software and its engineering~Software evolution}
 	
 	
@@ -201,7 +200,7 @@
 	%%
 	%% Keywords. The author(s) should pick words that accurately describe
 	%% the work being presented. Separate the keywords with commas.
-	\keywords{software performance, software evolution, configurable software systems, machine learning, active learning}
+	\keywords{Software performance, software evolution, configurable software systems, machine learning, active learning}
 	
 	%% A "teaser" image appears between the author and affiliation
 	%% information and the body of the document, and typically spans the
@@ -277,30 +276,30 @@
 	Depending on the configuration, different system variants with different behavior and performance can be derived.
 	
 	\subsection{Performance-Influence Models}\label{sec:pimodels}
-	Consider the following running example of a database management system (DBMS) with two selectable features: \textsc{Encryption} and \textsc{compression}.
+	Consider the following running example of a database management system (DBMS) with two selectable features: \textsc{Encryption} and \textsc{Compression}.
 	Either feature adds execution time to the overall performance, but, if both features are selected, the execution time is smaller than the sum of the individual features' contribution to performance: Less data is encrypted if it is compressed beforehand.
 	An \textit{interaction} in this setting is the combined effect of features \textsc{Encryption} and \textsc{compression}.
 	We can assign each feature and interaction an \textit{influence} that it contributes to the overall performance, if selected. In our example, the individual influences of the two features are positive (increasing execution time), whilst the interaction's influence is negative (decreasing execution time).
 	
 	The influence of features on performance can be described using a \emph{performance-influence model}~\cite{siegmundPerformanceinfluenceModelsHighly2015}.
 	A performance-influence model is a linear prediction model of the form $\Pi:C\rightarrow \mathbb{R}$, whereby $C$ denotes a configuration vector (assignment of concrete values to configuration options) and the estimate is a system variant's real-valued performance:
-
+	
 	\begin{align} \label{eq:pimodel}
-		\begin{split}
-		\Pi(c) = \beta^T c =  \begin{bmatrix}
-		\beta_1\\
-		\vdots \\
-		\beta_{2^{\vert F\vert}}
-		\end{bmatrix}^T \cdot \begin{bmatrix}
-		c_1\\
-		\vdots \\
-		c_{2^{\vert F\vert}}
-		\end{bmatrix}
-		\end{split}
-		\begin{split}
-		\beta_i \in \mathbb{R}^{2^{|F|}}\\
-		c_i \in \lbrace 0,1\rbrace^{2^{|F|}}
-		\end{split}
+	\begin{split}
+	\Pi(c) = \beta^T c =  \begin{bmatrix}
+	\beta_1\\
+	\vdots \\
+	\beta_{2^{\vert F\vert}}
+	\end{bmatrix}^T \cdot \begin{bmatrix}
+	c_1\\
+	\vdots \\
+	c_{2^{\vert F\vert}}
+	\end{bmatrix}
+	\end{split}
+	\begin{split}
+	\beta_i \in \mathbb{R}^{2^{|F|}}\\
+	c_i \in \lbrace 0,1\rbrace^{2^{|F|}}
+	\end{split}
 	\end{align}
 	
 	$F$ denotes the set of all features. Our linear model has $\vert 2^F\vert$ terms, whereby each term $t \subseteq F$ corresponds to a subset of $F$ and is described by a coefficient $\beta_f$ and a configuration parameter $c_f$.
@@ -358,12 +357,12 @@
 	
 	To include new measurements into the sample set, we consider the following situations. On the one hand, our sample set might already hint to some possible change points and associated configuration options. On the other hand, our sample set might be too sparse, such that we cannot infer some change points yet. To address this trade-off, we devise two strategies, exploration and exploitation, both of which address both configurations and commits. 
 	
-	 For \emph{exploitation}, we sample new measurements to verify guesses based on the current state. That is, in Figure~\ref{fig:sampling plan}, we might include the measurements depicted by black-filled symbols~($\starletfill$/$\pentagofill$). Black-filled stars~($\starletfill$) represent measurements that are of interest because we have already identified one change point for configuration \textsc{Compression}. We exploit this knowledge to test further configuration options involved in this change point. The black-filled pentagons~($\pentagofill$) represent measurements that are interesting, because we have identified another early change point for \textsc{Compression}, but within a rather broad range of commits. Thus, we include further measurements from that range to narrow down the possible range for this particular change point. 
-	 
-	 For \emph{exploration}, we might include the measurements denoted by white symbols~($\starlet$/$\pentago$). White stars~($\starlet$) represent measurements that explore new configurations. In our example, the interaction between \textsc{Compression} and \textsc{Encryption} is the only configuration left to be measured. We include several commits of a particular new configuration to unveil possible performance variation that indicates possible change points. White pentagons ($\pentago$) represent measurements that are of interest because they  increase the overall measurement coverage. We include measurements from large intervals of not yet measured commits, since possible change points can be hidden there.
-	 
+	For \emph{exploitation}, we sample new measurements to verify guesses based on the current state. That is, in Figure~\ref{fig:sampling plan}, we might include the measurements depicted by black-filled symbols~($\starletfill$/$\pentagofill$). Black-filled stars~($\starletfill$) represent measurements that are of interest because we have already identified one change point for configuration \textsc{Compression}. We exploit this knowledge to test further configuration options involved in this change point. The black-filled pentagons~($\pentagofill$) represent measurements that are interesting, because we have identified another early change point for \textsc{Compression}, but within a rather broad range of commits. Thus, we include further measurements from that range to narrow down the possible range for this particular change point. 
+	
+	For \emph{exploration}, we might include the measurements denoted by white symbols~($\starlet$/$\pentago$). White stars~($\starlet$) represent measurements that explore new configurations. In our example, the interaction between \textsc{Compression} and \textsc{Encryption} is the only configuration left to be measured. We include several commits of a particular new configuration to unveil possible performance variation that indicates possible change points. White pentagons ($\pentago$) represent measurements that are of interest because they  increase the overall measurement coverage. We include measurements from large intervals of not yet measured commits, since possible change points can be hidden there.
+	
 	These four strategies (exploration and exploitation of configurations and commits) prioritize measurements to be included next into the sample set. Adaptive sampling techniques have been successfully applied to obtain both performance-influence models~\cite{siegmundPredictingPerformanceAutomated2012,sarkarCostEfficientSamplingPerformance} and performance histories~\cite{muhlbauer_accurate_2019} before. However, it is unclear whether fewer measurements are sufficient to assess the performance-influence of configuration options and interactions with respect to version changes. This is what we address in this work.
-		
+	
 	\section{An algorithm for change point detection}\label{sec:cpmodel}
 	We propose an algorithm to detect substantial shifts in the performance of software configurations and associate them to individual commits and options or interactions. We lay out our approach as an iterative search across the commit history and configuration space. 
 	
@@ -428,13 +427,13 @@
 	\begin{equation}\label{eq:theta}
 	\begin{gathered}
 	\theta_\tau(a, b) = \begin{cases}
-	0,\quad \vert\pi(a) - \pi(b)\vert < \tau\\
-	1,\quad \vert\pi(a) - \pi(b)\vert \geq \tau
+	0,\quad \vert\,\pi(a) - \pi(b)\,\vert < \tau\\
+	1,\quad \vert\,\pi(a) - \pi(b)\,\vert \geq \tau
 	\end{cases}\quad a, b \in V, \tau \in \mathbb{R}
 	\end{gathered}
 	\end{equation}
 	The function evaluates to $1$ if the difference between performance $\pi_a$ and $\pi_b$ of commits $a$ and $b$ exceeds the threshold $\tau$ and $0$ if not.
-		
+	
 	Given a pair of commits, we can now decide whether performance has changed somewhere between the two commits.
 	However, not each pair of commits is equally informative.
 	The farther the distance between two commits, the lesser the information we can obtain, as there might be several change points in between. 
@@ -485,7 +484,7 @@
 	% genauere Erklärung, was mit der STDEV gemeint/ausgedrückt wird
 	
 	The threshold $t_\text{CPL}$ is the average change point likelihood over all commits plus a factor $N_\text{CPL}$ times its corresponding standard deviation over all commits. 
-	The factor $N_\text{CPL}$ (default value: 3) allows us to filter peaks that do not stand out enough and might be false positives. The greater $N_\text{CPL}$ is, the stricter the filtering of peaks. That is, for each configuration in our learning set, we obtain a set of commits (configuration-specific candidate commits) that represent possible change points.
+	The factor $N_\text{CPL}$ (default value: 3) allows us to filter peaks that do not stand out enough and might be false positives. The greater $N_\text{CPL}$ is, the stricter the filtering of peaks. That is, for each configuration in our learning set, we obtain a set of commits (configuration-dependent candidate commits) that represent possible change points.
 	To reduce variation among the obtained commits, we cluster the commits using kernel density estimation (KDE). The purpose of KDE in our setting is to estimate the probability mass function of whether a commit is a change point. The local maxima of this KDE, subsequently, represent our set of candidate commits. Note that, if two distinct change points are almost coincident commit-wise, they can be mistakenly identified by our approach as one change point that, subsequently, can be associated with configuration options belonging to the two individual change points.
 	
 	\subsubsection{Associating Commits and Options}
@@ -501,7 +500,7 @@
 	\label{eq:t_influence}
 	\end{gathered}
 	\end{equation}
-	We consider options as influential, if their estimated influence is greater than if each configuration option were equally influential. In addition, we add to this threshold the standard deviation of the influences of all configuration options. In theory, our regression model eliminates non-influential configuration options. If more than configuration option is influential (i.e., two or more options interact) their respective estimated influence should be roughly equal. To avoid false positives in he estimation of influential configuration options, we use the standard deviation and the parameter $N_\text{influence}$ (default value: 1) to filter only estimations with low variation among the estimated influences. If the intercept of a model (i.e., the coefficient not related to any regression model variable) exceeds this threshold, we consider this candidate commit a change point that is not configuration-specific (i.e., it affects all configurations). The outcome is a list of \emph{associations}: pairs of candidate commits and (likely) influential configuration options. 
+	We consider options as influential, if their estimated influence is greater than if each configuration option were equally influential. In addition, we add to this threshold the standard deviation of the influences of all configuration options. In theory, our regression model eliminates non-influential configuration options. If more than configuration option is influential (i.e., two or more options interact) their respective estimated influence should be roughly equal. To avoid false positives in he estimation of influential configuration options, we use the standard deviation and the parameter $N_\text{influence}$ (default value: 1) to filter only estimations with low variation among the estimated influences. If the intercept of a model (i.e., the coefficient not related to any regression model variable) exceeds this threshold, we consider this candidate commit a change point that is not configuration-dependent (i.e., it affects all configurations). The outcome is a list of \emph{associations}: pairs of candidate commits and (likely) influential configuration options. 
 	% unklar, warum N_influence hier eingeführt wird
 	
 	\subsection{Iteration: Acquiring New Measurements}\label{sec:acquisition}
@@ -542,11 +541,11 @@
 	The second sett of experiments uses a batch of real-world performance measurements of three software systems as a necessarily incomplete ground truth to explore whether our algorithm can be practically applied to real-world systems.
 	
 	With this split experiment setup, we aim at answering the following two research questions:
-	\begin{enumerate}[\textbf{$\text{RQ}_{1}$}:]
-		\item Can we \emph{accurately} and \emph{efficiently} identify configuration-specific performance change points? 
-		\item Can we \emph{practically} identify configuration-specific change points \emph{in a real-world setting}? 
+	\begin{enumerate}[leftmargin=0.825cm]
+		\item[\bf RQ$_1$:] Can we \emph{accurately} and \emph{efficiently} identify configuration-de\-pen\-dent performance change points? 
+		\item[\bf RQ$_2$:] Can we \emph{practically} identify configuration-de\-pen\-dent change points \emph{in a real-world setting}? 
 	\end{enumerate}
-	
+	% 
 	\subsection{Controlled Experiment Setup}
 	We break down the research question $\text{RQ}_1$ into three objectives  to study the influence of the size of configurable software systems, change point properties, and measurement effort.
 	
@@ -568,9 +567,9 @@
 		\centering
 		\captionof{table}{Parameter ranges for the synthetic experiment.}
 		\label{tab:synthetic_experiment_ranges}
-		\begin{tabular}{llr}
+		\begin{tabular}{lll}
 			\toprule
-			\textbf{}                & \textbf{Parameter}        & \multicolumn{1}{r}{\textbf{Range}} \\
+			\textbf{}                & \textbf{Parameter}        & \multicolumn{1}{l}{\textbf{Range}} \\
 			\midrule
 			\parbox[t]{20mm}{\multirow{4}{*}{\rotatebox[origin=c]{0}{\parbox{2cm}{\centering\footnotesize Synthesized Systems}}}} & $n_\text{options}$                & 8, 16, 32, 64                \\
 			& $n_\text{commits}$                & 1000, 2500                \\
@@ -592,11 +591,11 @@
 	
 	\begin{table}
 		\centering
-		\captionof{table}{Project characteristics for our three subject systems}
+		\captionof{table}{Project characteristics of subject systems.}
 		\label{tab:properties}
 		\begin{tabular}{lrr}
 			\toprule
-			\textbf{Name} & \textbf{\#Options} & \textbf{\#Commits}\\
+			\textbf{Name} & \textbf{\#\,Options} & \textbf{\#\,Commits}\\
 			\midrule
 			\textsc{xz} & 16 & 1193\\
 			\textsc{lrzip} & 9 & 743 \\
@@ -626,7 +625,7 @@
 	
 	\subsection{Results}	
 	\subsubsection{$\text{RQ}_1$ (Controlled Experiment).}
-	We illustrate the results of our first set of experiments in Figures~\ref{fig:results_rq1_accuracy_terminated}, \ref{fig:results_rq1_frequency}, and \ref{fig:results_rq1_degree}. The vast majority of experiments terminated within the limit of 30 iterations, as shown in Figure~\ref{fig:results_rq1_frequency}. A small portion of experiments, however, did not meet our termination criteria (more on that below). From all experiments that terminated in Figure~\ref{fig:results_rq1_accuracy_terminated}, we depict the F1 score after they have terminated, that is, after their last iteration\footnote{Due to space limitations we report precision and recall on the paper's companion Web site.}. For most iterations, the mean F1 score falls around or over 0.7, with the first quartile  only slightly being as low as 0.5 (at iteration 29).  In the grand scheme of things, the vast majority of experiments terminated with reasonably high F1 score. 
+	We illustrate the results of our first set of experiments in Figures~\ref{fig:results_rq1_accuracy_terminated}, \ref{fig:results_rq1_frequency}, and \ref{fig:results_rq1_degree}. The vast majority of experiments terminated within the limit of 30 iterations, as shown in Figure~\ref{fig:results_rq1_frequency}. A small portion of experiments, however, did not meet our termination criteria (more on that below). From all experiments that terminated in Figure~\ref{fig:results_rq1_accuracy_terminated}, we depict the F1 score after they have terminated, that is, after their last iteration\footnote{Due to space limitations, we report precision and recall on the paper's companion Web site.}. For most iterations, the mean F1 score falls around or over 0.7, with the first quartile  only slightly being as low as 0.5 (at iteration 29).  In the grand scheme of things, the vast majority of experiments terminated with reasonably high F1 score. 
 	\begin{figure}
 		\begin{subfigure}{\linewidth}
 			\centering
@@ -647,10 +646,10 @@
 			\vspace{4mm}
 			\centering
 			\includegraphics[width=\linewidth]{images/max_degree_after_termination}
-			\caption{Influence of the number of change points and interaction degree on accuracy}	
+			\caption{Influence of the number of change points and interaction degree on accuracy.}	
 			\label{fig:results_rq1_degree}
 		\end{subfigure}
-		\caption{Result for the synthetic experiment}
+		\caption{Result for the synthetic experiment.}
 		\label{fig:results_rq1:results_rq1_degree}
 	\end{figure} 	
 	Regarding measurement effort, for small systems with 8 configuration options, we required up to 50\,\% of all possible measurements. For greater systems, the required measurement effort was well below 1\,\%. The high reported measurement effort for smaller systems is due to our choice of the measurements per iterations, which vastly over-approximates. Since we are able handle systems with more configuration options with similar effort, we are confident that a smaller number of measurements per iteration would reduce the relative measurement effort required substantially.
@@ -660,11 +659,11 @@
 	For the experiments not terminating within limit (the rightmost bar in Figure~\ref{fig:results_rq1_frequency}), we conducted an additional analysis. We compared whether and how the parameter setting of Table~\ref{tab:synthetic_experiment_ranges} explains this non-termination. One setting stands out as the cause for not finishing the experiment within 30 iterations: the number of measurements per iterations. The lower the number of measurements ($n_\text{measurements}$), the more iterations our approach needs.
 	\vspace{2mm}
 	\greybox{
-		\textbf{Summary ($\text{RQ}_1$)}: We are able to identify and pinpoint config\-uration-specific performance change points accurately and at scale. The number of measurements per iteration is the main factor influencing how fast our algorithm terminates.
+		\textbf{Summary ($\text{RQ}_1$)}: We are able to identify and pinpoint config\-uration-dependent performance change points accurately and at scale. The number of measurements per iteration is the main factor influencing how fast our algorithm terminates.
 	}
 	
 	\subsubsection{$\text{RQ}_2$ (Pre-Study)}
-	For our three subject systems, we have manually identified a number of commits, for which performance chang\-ed substantially. We have found 7 change points for \textsc{lrzip}, 2 for \textsc{xz}, and 2 for \textsc{oggenc}. For \textsc{lrzip}, 5 of 7, and for \textsc{xz}, 2 of 2 performance changes affect multiple configurations. By contrast, 2 change points for \textsc{lrzip} affect all measured configurations. All of the measured configurations for \textsc{oggenc} show a shift in performance. That is, the identified change points for \textsc{oggenc} as well as the two for \textsc{lrzip} are likely not configuration-specific. 	
+	For our three subject systems, we have manually identified a number of commits, for which performance chang\-ed substantially. We have found 7 change points for \textsc{lrzip}, 2 for \textsc{xz}, and 2 for \textsc{oggenc}. For \textsc{lrzip}, 5 of 7, and for \textsc{xz}, 2 of 2 performance changes affect multiple configurations. By contrast, 2 change points for \textsc{lrzip} affect all measured configurations. All of the measured configurations for \textsc{oggenc} show a shift in performance. That is, the identified change points for \textsc{oggenc} as well as the two for \textsc{lrzip} are likely not configuration-dependent. 	
 	To further understand possible relations of change points with configuration options, we searched in commit messages for clues. We discuss two notable findings. 
 	
 	For \textsc{xz}, the commit messages for both change points referenced three particular configuration options (\textsf{hc3}, \textsf{hc4}, \textsf{MatchFinder}). For \textsc{lrzip}, one commit message references configuration option (\textsf{zpac}). Four of seven commit messages contained keywords relating to performance. Two examples are the following:
@@ -674,7 +673,7 @@
 		"\texttt{\footnotesize Use ffsl for a \textbf{faster} lesser\_bitness function.}" (revision 521 of \textsc{lrzip})
 	\end{quotation}
 	
-	Of the remaining 6 commits for \textsc{lrzip}, we identified one as a successor to a merge commit. Within the related pull request\footnote{https://github.com/ole-tange/lrzip/commit/1203a1853e892300f79da19f14aca11152b5b890}, we discovered that the configuration \textsc{lzma} was set to be ignored. This plausibly corresponds to an observed performance shift for configurations with this option enabled. However, this orphan configuration option results in an inconsistent configuration interface, which we discovered with our approach. 
+	Of the remaining 6 commits for \textsc{lrzip}, we identified one as a successor to a merge commit. Within the related pull request\footnote{\url{https://github.com/ole-tange/lrzip/commit/1203a1853e892300f79da19f14aca11152b5b890}}, we discovered that the configuration \textsc{lzma} was set to be ignored. This plausibly corresponds to an observed performance shift for configurations with this option enabled. However, this orphan configuration option results in an inconsistent configuration interface, which we discovered with our approach. 
 	
 	\subsubsection{$\text{RQ}_2$ (Real-World Performance Data)}
 	Across the repetitions of our experiments, we found a number of candidate solutions close to the two change points commits for \textsc{xz} and \textsc{oggenc}, respectively, on average after, 3 to 5 iterations. After more than five iterations, the majority of repetitions pinpointed commits correctly within our narrow 5 commit interval. By contrast, for \textsc{lrzip}, we required up to fifteen iterations to reach this temporal precision. Note that, for \textsc{lrzip}, the number of change points is more than three times greater than for the other two software systems. In addition, three pairs of change points are 10 commits or less apart, which led to falsely identified commits. 
@@ -691,18 +690,20 @@
 	\paragraph{Efficiency} Among all experiments conducted with our synthetic setup, our approach yielded reasonable to high accuracy across most parameter settings. A subsequent analysis of parameter settings showed that our algorithm is not limited by the size of a problem space, but rather by the number of measurements per iteration. 
 	Our algorithm found multiple change points across different parameter settings, including those with large numbers of commits and configuration options. 
 	The vast majority of cases terminated in early iterations with high accuracy. That is, we were able to tackle a problem with exponential complexity (with respect to the number of configuration options from which we can draw new measurements) with a measurement budget that is linear in the number of iterations (we used only 30) and the measurements per iteration (between 100 and 500 measurements per iteration), respectively.
-	Hence, we are confident that our approach scales and can efficiently approximate change points for large software systems. Notably, we are able to reproduce this finding in real-world settings when identifying the temporal location of change points. For our controlled experiment setup, we have not tuned the algorithms’ parameters to reach optimal efficiency or accuracy. However, even without tuning, we demonstrated the feasibility and efficiency of our approach. Project-specific fine tuning of several parameters is a possible extension to our approach and can further improve our results.
+	Hence, we are confident that our approach scales and can efficiently approximate change points for large software systems. Notably, we are able to reproduce this finding in real-world settings when identifying the temporal location of change points. For our controlled experiment setup, we have not tuned the algorithms’ parameters to reach optimal efficiency or accuracy. However, even without tuning, we demonstrated the feasibility and efficiency of our approach. Project-specific fine tuning of parameters may further improve the performance of our approach.
 	
 	\paragraph{Pinpointing Configuration Options}
-	The synthetic setup has shown that our algorithm can conceptually handle both time and space. We were able to precisely identify commits for which performance changed substantially. By contrast, we were not able to fully reproduce this in a setting with real-world data when attempting to pinpoint change points to configuration options, which may be caused by an inconsistently documented configuration interface. Missing information in the real-world setup emphasizes the importance of a synthetic setup to evaluate approaches such as ours and explore possible limitations and necessary extensions. So, we have documented that, given a precisely identified commit, we can link the affected files to configuration options with little effort. In turn, given a set of code segments of a commit, matching this with the overall code base has been extensively studied before under the umbrella of feature location~\cite{hill_which_2013}. Inconsistencies in the documentation of configuration options is a well known and prevalent problem~\cite{rabkin_static_2011}. 
-	Our approach might be a means to complement existing feature location techniques with information about configuration-dependent performance changes. 	
-	In our latter experiment, instead of directly sampling new arbitrary configurations, we used a finite set of configurations as a proxy (cf.~Section~\ref{sec:rq2_operationalization}). This does not reflect the original layout of our algorithm, but lets us efficiently explore some limitations of this approach. We have learned that, for interpreting the results of our approach, domain knowledge is advantageous as we have identified incomplete and inconsistent configuration interfaces as possible limiting factors. We acknowledge that, while our approach performs well as an automated pipeline in a controlled environment, for real-world applications, a semi-automated setup with additional manual measurement prioritization and deeper knowledge of configuration constraints would improve the applicability of our approach. This is a promising further avenue of future work.
+	The synthetic setup has shown that our algorithm can conceptually handle both time and space. We were able to precisely identify commits for which performance changed substantially. By contrast, we were not able to fully reproduce this in a setting with real-world data when attempting to pinpoint change points to configuration options, which we attribute to missing information on and inconsistencies in the configuration interface.
+	Missing information in the real-world setup emphasizes the importance of a synthetic setup to evaluate approaches such as ours and to explore possible limitations and necessary extensions. So, we have documented that, given a precisely identified commit, we can link the affected files to configuration options with little effort. In turn, given a set of code segments of a commit, matching this with the overall code base has been extensively studied before under the umbrella of feature location~\cite{hill_which_2013}. Inconsistencies in the documentation of configuration options is a well known and prevalent problem~\cite{rabkin_static_2011}. 
+	Our approach complements existing feature location techniques with information on configuration-dependent performance changes. 	
+	In our latter experiment, instead of directly sampling new arbitrary configurations, we used a finite set of configurations as a proxy (cf.~Section~\ref{sec:rq2_operationalization}). This does not reflect the original layout of our algorithm, but lets us efficiently explore some limitations of the approach. We have learned that, for interpreting the results of our approach, domain knowledge is advantageous, especially, as we have identified incomplete and inconsistent configuration interfaces as possible limiting factors. We acknowledge that, while our approach performs well as an automated pipeline in a controlled environment, for real-world applications, a semi-automated setup with additional manual measurement prioritization and deeper knowledge of configuration constraints would improve the applicability of our approach. 
 	
 	\paragraph{Threats to Validity}
-	Threats to \emph{internal validity} include measurement noise that may distort change point approximation. We mitigate this threat by repeating each measurement five times and reporting the mean. With respect to the mean performance, the reported variation was below 10\%. For RQ2, we considered only performance changes of, at least, 10\%. We conducted a pre-study, where we manually identified change points.
-	Hence, we are confident that our raw data are robust against outliers. The setup in RQ2 relies on a limited set of previously sampled configurations instead of actively acquiring new ones. We mitigate this limitation by selecting a broad set of configurations in our pre-study with different sampling strategies. We sampled as many randomly selected configurations as there are pairs of configuration options, resulting in a reasonably high coverage of the configuration space. 
+	Threats to \emph{internal validity} include measurement noise, which may distort change point approximation. We mitigate this threat by repeating each measurement five times and reporting the mean. With respect to the mean performance, the reported variation was below 10\%. For RQ$_2$, we considered only performance changes of, at least, 10\%. 
+	%Furthermore, we conducted a pre-study, where we manually identified change points.
+	Hence, we are confident that our raw data are robust against outliers. The setup in RQ$_2$ relies on a limited set of previously sampled configurations instead of actively acquiring new ones. We mitigate this limitation by selecting a broad set of configurations in our pre-study with different sampling strategies. We sampled as many randomly selected configurations as there are pairs of configuration options, resulting in a reasonably high coverage of the configuration space. 
 	
-	Regarding \emph{external validity}, we cannot claim that we have identified all limitations possibly arising in a practical setting. However, we selected popular software systems that are well optimized for performance and often make use of configuration options to tune performance.  Although we have shown possible limitations in a practical setting, our results, in conjunction with our exhaustive synthetic study, are reproducible, and we were able to test corner cases and assess scalability so that we believe that our results hold for many practical use cases.
+	Regarding \emph{external validity}, we cannot claim that we have identified all limitations possibly arising in a practical setting. However, we selected popular software systems that are well optimized for performance and often make use of configuration options to tune performance.  Although we have encountered possible limitations in a practical setting, our results, in conjunction with our exhaustive synthetic study, are reproducible, and we were able to test corner cases and assess scalability so that we believe that our results hold for many practical use cases.
 	
 	\section{Related Work}\label{sec:rw}
 	\paragraph{Performance-relevant Commits} Identifying performance-changing commits is a prevalent challenge in regression testing, often applying change point detection algorithms on batches of performance observations~\cite{cityIdentifying2014,daly_industry_2020}. A way to reduce testing overhead is to employ only a fraction of performance observations or to prioritize commits. Alcocer et al. assess performance for uniformly selected commits to estimate the risk of a performance change introduced by unobserved commits~\cite{sandoval_alcocer_learning_2016,alcocer_prioritizing_2020}. Huang et al. estimate the risk of performance changes solely based on static analysis of individual commits to prioritize commits for regression testing without assessing performance~\cite{huang_performance_2014}. Mühlbauer et al. use Gaussian Processes and iterative sampling to learn performance histories with few performance observations~\cite{muhlbauer_accurate_2019}. They extract performance changing commits by applying change point detection algorithms to learned performance histories. All of the above approaches reduce testing overhead, but do not address the performance across different configurations of software systems. Our approach incorporates performance changes across different configurations by leveraging similarities in related configuration's performance histories.
@@ -712,31 +713,24 @@
 	A similar scenario to ours has been studied by Jamshidi et al.~\cite{jamishidi_transfer_2017,jamshidi_transfer_gp_2017,jamshidi_learning_2018}. Between software versions, the performance influence of only few configuration options changes. The authors propose two approaches for learning a transfer function between performance models of different environments, such as versions, based on Gaussian Processes~\cite{jamshidi_transfer_gp_2017} and progressive shrinking the configuration space~\cite{jamshidi_learning_2018}. We see great potential for future work in applying Gaussian Processes to our problem.
 	
 	\section{Conclusion}
-	During software evolution changes can introduce performance
-	bottlenecks that are challenging detecting. As most contemporary
-	software systems are configurable, such performance changes are
-	often configuration-specific. This renders detecting configuration-
-	specific performance changes impossible with exhaustive measurements due to the combinatorial complexity of software systems‘ configuration spaces. We propose a novel approach to tackle
-	this complexity and identify configuration-specific performance
-	changes with workable effort. Starting from a small sample of measurements (pairs of configurations and commits), our approach iteratively selects new measurements along two dimensions: time and
-	configuration space. To iteratively update an approximation of existing change points, the selection of new measurements is guided by
-	an estimated change point likelihood of a commit introducing a performance change as well as by configurations that are likely associated
-	with performance changes, both based on previous measurements.
-	We evaluate our approach with respect to scalability, accuracy, and practicality with two sets of experiments. To demonstrate that our approach is sound
-	and efficient, we have applied our approach to synthetic data of
-	software systems varying in version history size and configuration
-	complexity. With relatively few measurements, we can accurately
-	identify configuration-specific performance changes for software
-	systems which exhibit thousands of commits and millions of configurations. To demonstrate feasibility in a practical setting, we
-	applied our approach to performance data of three configurable
-	software systems. We were able to detect prevalent performance
-	changes accurately, while partially confirming prevalent practical
-	challenges that are easy to overcome with manual inspection of
-	commit messages. In retrospect, our approach provides knowledge about previous and existing performance changes which can be useful to
-	prioritize future measurements for performance regression testing.
+	Finding optimal configurations and relevant configuration options that influence the performance of a software system is already challenging, but in the light of software evolution, \emph{configuration-dependent} performance changes may lurk in a potentially large number of different versions of the system.
+	Consequently, detecting configuration-dependent performance changes by measuring all configurations is often intractable in practice. We devise a novel approach to identify config\-uration-dependent performance changes with low effort. Starting from a small sample of measurements (pairs of configurations and commits), our approach iteratively selects new measurements along two dimensions: time and
+	configuration space. The selection is guided by an
+	estimation of the likelihood that a commit introduces a performance change as well as by identifying configuration options that are relevant for performance, both based on previous measurements.
+	
+	To demonstrate soundness and efficiency, we applied our approach to a synthetic data set modelling different software systems that vary in the length of their version history and in the complexity of  their configuration space. With only few measurements, our approach was able to accurately
+	identify configuration-dependent performance changes for software
+	systems with thousands of commits and millions of configurations. 
+	To demonstrate feasibility in a practical setting, we
+	applied our approach to performance data of three substantial configurable
+	software systems. Again, we were able to detect performance
+	changes accurately, and we even identified an inconsistency in the configuration
+	interface of \textsc{lrzip}. While pinpointing performance changes to individual configuration options was possible by hand, an automate analysis was inconclusive. 
+	
+	In further work, we will supplement our approach with results from static analysis and commit messages, increasing accuracy and providing a more holistic picture of performance behavior across configuration space and project evolution.
 	
 	\section{Acknowledgments}
- 	Apel’s work has been supported by the Deutsche Forschungsgemeinschaft (DFG) under the contract AP 206/11-1. Siegmund’s work has been supported by the DFG under the
+	Apel’s work has been supported by the German Research Foundation (DFG) under the contract AP 206/11-1. Siegmund’s work has been supported by the DFG under the
 	contracts SI 2171/2 and SI 2171/3-1.
 	
 	\clearpage
