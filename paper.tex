@@ -190,7 +190,7 @@
 		
 		In this work, we combine two perspectives---variability and time---into a novel perspective. We propose an approach to identify con\-figuration-dependent performance changes retrospectively across the software variants and versions of a software system. In a nutshell, we iteratively sample pairs of configurations and versions and measure the respective performance, which we use to update a model of likelihoods for performance changes. Pursuing a search strategy with the goal of measuring selectively and incrementally further pairs, we increase the accuracy of identified change points related to configuration options and interactions.
 		
-		We have conducted a number of experiments both on controlled synthetic datasets as well as in real-world scenarios with different software systems. Our evaluation demonstrates that we can pinpoint performance shifts to individual configuration options and interactions as well as commits introducing change points with high accuracy and at scale. Experiments on three real-world systems explore the effectiveness and practicality of our approach.
+		We have conducted a number of experiments both on controlled synthetic data sets as well as in real-world scenarios with different software systems. Our evaluation demonstrates that we can pinpoint performance shifts to individual configuration options and interactions as well as commits introducing change points with high accuracy and at scale. Experiments on three real-world systems explore the effectiveness and practicality of our approach.
 		
 	\end{abstract}
 	
@@ -305,13 +305,13 @@
 	$F$ denotes the set of all features. Our linear model has $\vert 2^F\vert$ terms, whereby each term $t \subseteq F$ corresponds to a subset of $F$ and is described by a coefficient $\beta_f$ and a configuration parameter $c_f$.
 	Coefficients encode the performance-influence of features and interactions. $c$ is a vector and denotes the assignment of concrete values to configuration options or interactions. A configuration parameter $c_t$ evaluates to $1$, if all configuration options of the corresponding subset $t \subseteq F$ are selected, and $0$ otherwise. The empty set corresponds to the invariable core functionality of the software system. Singleton subsets correspond to individual features, compound subsets to interactions of features.
 	
-	For our DBMS example, we present a fully determined performance-influence model in Equation~\ref{eq:pimodel_dbms}. The first two terms correspond to the features \textsc{Encrpytion} and \textsc{Compression}, respectively. The third term respresents the interaction of both features. The configuration parameter $c_{\textsc{Compr}\land\textsc{Encrypt}}$ evaluates to $1$, if both $c_{\textsc{Encrypt}}$ and $c_{\textsc{Compr}}$ evaluate to $1$.
+	For our DBMS example, we present a fully determined performance-influence model in Equation~\ref{eq:pimodel_dbms}. The first two terms correspond to the features \textsc{Encryption} and \textsc{Compression}, respectively. The third term represents the interaction of both features. The configuration parameter $c_{\textsc{Compr}\land\textsc{Encrypt}}$ evaluates to $1$, if both $c_{\textsc{Encrypt}}$ and $c_{\textsc{Compr}}$ evaluate to $1$.
 	That is, $c_{\textsc{Compr}\land\textsc{Encrypt}} \equiv c_{\textsc{Encrypt}} \cdot c_{\textsc{Compr}}$. In the last term, we omit the configuration parameter $c_\emptyset$, as this term represents invariable functionality.
 	
 	\begin{align} \label{eq:pimodel_dbms}
 	\begin{split}
-	\Pi_{\text{DBMS}}(c) =&~\beta_{\textsc{Encrpyt}} \cdot c_{\textsc{Encrpyt}} + \beta_{\textsc{Compr}} \cdot c_{\textsc{Compr}} \\
-	+&~ \beta_{\textsc{Compr\ $\land$\ Encrpyt}} \cdot c_{\textsc{Compr\ $\land$\ Encrpyt}}
+	\Pi_{\text{DBMS}}(c) =&~\beta_{\textsc{Encrypt}} \cdot c_{\textsc{Encrypt}} + \beta_{\textsc{Compr}} \cdot c_{\textsc{Compr}} \\
+	+&~ \beta_{\textsc{Compr\ $\land$\ Encrypt}} \cdot c_{\textsc{Compr\ $\land$\ Encrypt}}
 	+ \beta_{\emptyset}
 	\end{split}
 	\end{align}
@@ -384,7 +384,7 @@
 	The rationale is not to lose previously identified change points, but at the same time, allow for removing identified changes points that are likely false positives due to new measurements.
 	Some associations, especially in the beginning, might be influenced by sampling bias and can be removed if successive iterations do not repeatedly revisit these associations. 
 	The algorithm terminates if the solution cache does not change for a number of iterations or a maximum number of iterations/measurements has been reached.
-	In what follo, we present the steps of our approach in detail. 
+	In what follows, we present the steps of our approach in detail. 
 	
 	\begin{figure}[ht]
 		\includegraphics[width=\linewidth]{images/ablauf.pdf}
@@ -611,7 +611,7 @@
 	As a workload for the file compression tools \textsc{lrzip} and \textsc{xz}, we used the Silesia corpus, which contains over 200~MB of files of different types. It was designed to compare different file compression algorithms and tools and has been used in previous studies~\cite{muhlbauer_accurate_2019}. For the audio transcoder \textsc{oggenc}, we encoded a raw WAVE audio file of over 60~MB from the Wikimedia Commons collection. For all three subject systems, we assess performance by reporting the execution time.
 	
 	All measurements were conducted on clusters of Ubuntu machines with Intel~Core
-	2 Quad CPUs (2.83~GHz) and 8~GB of RAM (\textsc{xz} and \textsc{lrzip}) and 16~GB of RAM (\textsc{oggenc}). To mitgate measurement bias, we repeated each measurement five times. The coefficient of variation (the ratio of standard deviation and the arithmetic mean) across all machines was well below ten percent. For commits that did not build, we reported the performance measurement of the most recent commit that did not fail to build.
+	2 Quad CPUs (2.83~GHz) and 8~GB of RAM (\textsc{xz} and \textsc{lrzip}) and 16~GB of RAM (\textsc{oggenc}). To mitigate measurement bias, we repeated each measurement five times. The coefficient of variation (the ratio of standard deviation and the arithmetic mean) across all machines was well below ten percent. For commits that did not build, we reported the performance measurement of the most recent commit that did not fail to build.
 	
 	\subsubsection{Operationalization}\label{sec:rq2_operationalization}
 	For the actual experiment, we apply our approach on the performance measurements obtained in the pre-study, with a few adjustments.
@@ -654,7 +654,7 @@
 	\end{figure} 	
 	Regarding measurement effort, for small systems with 8 configuration options, we required up to 50\,\% of all possible measurements. For greater systems, the required measurement effort was well below 1\,\%. The high reported measurement effort for smaller systems is due to our choice of the measurements per iterations, which vastly over-approximates. Since we are able handle systems with more configuration options with similar effort, we are confident that a smaller number of measurements per iteration would reduce the relative measurement effort required substantially.
 	
-	In Figure~\ref{fig:results_rq1_degree}, we decompose the reported F1 scores to learn how the number of change points or the interaction degree influence our approach. The x-axis shows the highest interaction degree of change points for an experiment run. For interactions of a degree up to 5, the F1 score is mostly above 0.5. We observe a downward trend in the boxplots: the more change points a system contained, the less accurate our algorithm's prediction is.
+	In Figure~\ref{fig:results_rq1_degree}, we decompose the reported F1 scores to learn how the number of change points or the interaction degree influence our approach. The x-axis shows the highest interaction degree of change points for an experiment run. For interactions of a degree up to 5, the F1 score is mostly above 0.5. We observe a downward trend in the box plots: the more change points a system contained, the less accurate our algorithm's prediction is.
 	
 	For the experiments not terminating within limit (the rightmost bar in Figure~\ref{fig:results_rq1_frequency}), we conducted an additional analysis. We compared whether and how the parameter setting of Table~\ref{tab:synthetic_experiment_ranges} explains this non-termination. One setting stands out as the cause for not finishing the experiment within 30 iterations: the number of measurements per iterations. The lower the number of measurements ($n_\text{measurements}$), the more iterations our approach needs.
 	\vspace{2mm}
